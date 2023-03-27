@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Student Sign In</title>
+    <script src="https://unpkg.com/vue@next"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css" type="text/css">
+</head>
+
+<body>
+    <div id="app" v-cloak>
+
+
+        <!--  show errors from form validation -->
+        
+        <div class="alert alert-danger" v-if="errors.length > 0">
+            <ul>
+                <li v-for="errors in errors">{{ error }}</li>
+            </ul>
+        </div>
+
+        <div class="card add-student m-2 p-2">
+            <h4 class="card-title">Add new student</h4>
+
+            <div class="form-group">
+                <label for="name">Name</label>
+                <!-- v-model newStudentName -->
+                <input id="name" class="form-control" v-model.trim="newStudentName">
+            </div>
+            <div class="form-group">
+                <label for="starID">Star ID</label>
+                <!-- v-model newStarID -->
+                <input id="starID" class="form-control" v-model.trim="newStarID">
+            </div>
+            <!-- v-on:click event handler -->
+            <button class="btn btn-primary" v-on:click="addStudent">Add</button>
+        </div>
+
+        <div class="card student-list m-2 p-2">
+            <h4 class="card-title">Student List</h4>
+            <div id="student-table">
+                <table class="table">
+                    <tr>
+                        <th>Name</th>
+                        <th>StarID</th>
+                        <th>Present?</th>
+                    </tr>
+                   <!-- TODO create table rows 
+                   Each row will have a checkbox, bound to the app's data 
+                   When the checkbox is checked/unchecked, the student will be signed in/out -->
+
+                    <tr v-for="student in students" v-bind:key="student.starID "v-bind:class=" { present: student.present, absent: !student.present } ">
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.starID }}</td>
+                        <td>
+                            <input type="checkbox" v-model="student.present" v-on:change="arriveOrLeft(student)">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+
+        <!-- TODO show a message when student arrives or leaves  -->
+
+        <div v-if="mostRecentStudent.name">
+
+            <div v-if="mostRecentStudent.present" class="alert alert-primary">
+                Welcome, {{ mostRecentStudent.name }}!
+            </div>
+
+            <div v-else class="alert alert-danger">
+                Goodbye, {{ mostRecentStudent.name}}. See you later!
+            </div>
+        </div>
+
+
+    </div>
+
+    <script>
+
+
+        // TODO Vue app   
+        
+        let app = Vue.createApp({
+            data() {
+                return {
+                    newStudentName:'',
+                    newStarID: '',
+                    students: [
+                        { name: 'A. Student', starID: 'aa1234bb', present: false },
+                        { name: 'B. Student', starID: 'cbh98732', present: false },
+                        { name: 'C. Student', starID: 'bdjh9863', present: false },
+                    ],
+                    errors: [],
+                    mostRecentStudent: {}  // for the most recent arrival or most recent departure
+                }
+            },
+            methods: {
+                addStudent() {
+
+                    this.errors = [] // clear errors array
+
+                    if (!this.newStudentName) {
+                        this.errors.push('Student name is required')
+                    }
+
+                    if (!this.newStarID) {
+                        this.errors.push('StarId is required')
+                    }
+
+                    //  add other checks here if needed
+
+                    // if there are no erros
+
+                    if (this.errors.length == 0) {
+                        let student = { name: this.newStudentName, starID: this.newStarID, present: false }
+                        this.students.push(student)
+                        this.newStudentName = ''  // to be able to clear the form
+                        this.newStarID = ''
+
+                        this.students.sort(function(s1, s2) {
+                            // return positive number if s1 should be sorted after s2
+                            if (s1.name.toUpperCase() > s2.name.toUpperCase()) {
+                                return 1
+                            }
+                            // return negative number if s should be sorted before s2
+                            if (s1.name.toUpperCase() < s2.name.toUpperCase()) {
+                                return -1
+                            }
+
+                            return 0
+                            // return  if order is equivalent 
+                            // optional - if names are the same, sort by starID
+                        })
+                    }
+
+                    // how to display errors to user?
+                },
+                arrivedOrLeft(student) {
+                    this.mostRecentStudent = student
+                }
+            }
+        })
+
+        app.mount('#app')
+
+
+    </script>
+
+</body>
+
+</html>
+
+
+                
