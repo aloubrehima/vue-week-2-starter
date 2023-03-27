@@ -99,7 +99,7 @@
                         </tr>
                         <!-- TODO use v-for to create one table row for each activity record -->
                         <tr v-for="record in activityRecords">
-                            <td>{{ shortDate(record.date) }}</td>
+                            <td>{{ shortDate ( record.date ) }}</td>
                             <td>{{ record.hours }}</td>
                             <td>{{ record.type }}</td>
                             <td>{{ record.medium }}</td>
@@ -156,7 +156,7 @@
                 
                 this.errors = []
 
-                let date = new Date(this.dataString)
+                let date = new Date(this.dateString)
 
                 // Is the date a valid date? Is it today or in the past?
                 if (!this.dateString || this.dateString === 'Invalid Date' || date > new Date() ) {
