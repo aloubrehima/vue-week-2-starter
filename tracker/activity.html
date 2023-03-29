@@ -73,6 +73,19 @@
                     <input id="media2" class="form-check-input" type="radio" value="Digital" v-model="medium">
                     <label class="form-check-label" for="media2">  <!-- TODO Display text --> Digital </label>
                 </div>
+                
+                
+                <div class="form-group">
+                    <input type="checkbox" v-model="completed">
+                    <label> Completed?</label>
+                </div>
+
+                <div>
+                    <label>Notes: </label>
+                    <textarea v-model="notes"></textarea>
+                </div>
+
+            
 
                 <div>
                     <!-- TODO Add v-on:click -->
@@ -96,13 +109,17 @@
                             <th>How many hours?</th>
                             <th>Type</th>
                             <th>Media</th>
+                            <th>Completed</th>
+                            <th>Notes</th>
                         </tr>
                         <!-- TODO use v-for to create one table row for each activity record -->
-                        <tr v-for="record in activityRecords">
+                        <tr v-for="record in activityRecords" v-bind:class="record.type">
                             <td>{{ shortDate ( record.date ) }}</td>
                             <td>{{ record.hours }}</td>
                             <td>{{ record.type }}</td>
                             <td>{{ record.medium }}</td>
+                            <td>{{ record.completed }}</td>
+                            <td>{{ truncatedNote(record.notes) }}</td>
                         </tr>
                     </table>
                 </div>
@@ -145,6 +162,11 @@
                 type: 'Sketching',
                 medium: 'Traditional',
 
+                // Add completed
+                completed: false,
+                notes: '',
+
+
                 // Used with the select-option in the form for the user to select the type
                 types: ['Sketching', 'Drawing', 'Painting'],
 
@@ -181,7 +203,9 @@
                         date: date,
                         hours: this.hours,
                         type: this.type,
-                        medium: this.medium
+                        medium: this.medium,
+                        completed: this.completed,
+                        notes: this.notes
                     }
 
                     this.activityRecords.push(newActivityRecord)
@@ -196,6 +220,14 @@
             },
             shortDate(date) {
                 return new Intl.DateTimeFormat('en-US', {timeZone: 'UTC'}).format(date)
+            },
+            truncatedNote: function(note) {
+                if (note.length > 40) {
+                    return note.substring(0, 40) + "...";
+                } else {
+                    return note;
+                }
+                
             }
         },
         computed: {

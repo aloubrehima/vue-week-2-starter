@@ -2,3 +2,16 @@
     max-height: 250px;
     overflow: scroll;
 }
+
+.Sketching {
+    background-color: teal;
+}
+
+.Drawing {
+    background-color: magenta;
+}
+
+.Painting {
+    background-color: gold;
+}
+
